@@ -1,0 +1,625 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>The MoveZilla Playbook — Moving Tips, Checklists & Field Stories</title>
+<meta name="description" content="Browse topic tiles, download printable checklists, and see the photos and field stories from every corner of the MoveZilla crew." />
+<meta name="theme-color" content="#0a0a0a" />
+<link rel="stylesheet" href="./shared/tokens.css" />
+<style>
+  /* ============================================================
+     V4 — VISUAL RESOURCE HUB
+     Concept: A denser, more playful homepage-style hub. Asymmetric
+     "bento" hero, big topic tiles with iconography, a downloadable
+     checklist module, a quote + stat module, and a photo-led field
+     stories strip. Image-forward, hands-on, scannable.
+     ============================================================ */
+
+  /* Bento hero */
+  .v4-hero {
+    padding-block: 3rem 4rem;
+    background:
+      radial-gradient(70% 80% at 100% 0%, color-mix(in srgb, var(--color-brand-orange) 14%, transparent) 0%, transparent 55%),
+      radial-gradient(60% 80% at 0% 100%, color-mix(in srgb, var(--color-brand-green) 10%, transparent) 0%, transparent 55%),
+      var(--color-surface);
+    border-bottom: 1px solid var(--color-border-soft);
+    position: relative;
+  }
+  .v4-hero__head {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    gap: 2rem; flex-wrap: wrap;
+    margin-bottom: 2rem;
+  }
+  .v4-hero__title {
+    font-size: clamp(2.5rem, 5.5vw, 4.5rem);
+    font-weight: 900; letter-spacing: -0.03em; line-height: 0.98;
+    color: var(--color-ink);
+    max-width: 22ch;
+  }
+  .v4-hero__title em {
+    font-style: normal;
+    background-image: linear-gradient(to right, var(--color-brand-orange), var(--color-brand-orange-light));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .v4-hero__side {
+    max-width: 26rem;
+    display: flex; flex-direction: column; gap: 1.1rem;
+  }
+  .v4-hero__side p { font-size: 1.05rem; line-height: 1.6; color: color-mix(in srgb, var(--color-ink) 65%, transparent); }
+
+  .bento {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, minmax(13rem, auto));
+    gap: 1rem;
+  }
+  @media (max-width: 1024px) { .bento { grid-template-columns: repeat(2, 1fr); grid-template-rows: auto; } }
+  @media (max-width: 640px)  { .bento { grid-template-columns: 1fr; } }
+
+  .bento__tile {
+    position: relative;
+    border-radius: var(--radius-2xl);
+    padding: 1.5rem;
+    overflow: hidden;
+    display: flex; flex-direction: column; justify-content: space-between;
+    min-height: 13rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .bento__tile:hover { transform: translateY(-3px); box-shadow: var(--shadow-elevated); }
+  .bento__tile--lg { grid-column: span 2; grid-row: span 2; min-height: 26rem; }
+  @media (max-width: 1024px) { .bento__tile--lg { grid-column: span 2; grid-row: auto; min-height: 18rem; } }
+  @media (max-width: 640px)  { .bento__tile--lg { grid-column: auto; } }
+  .bento__tile--wide { grid-column: span 2; }
+  @media (max-width: 1024px) { .bento__tile--wide { grid-column: span 2; } }
+  @media (max-width: 640px)  { .bento__tile--wide { grid-column: auto; } }
+
+  .bento__tile img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%; object-fit: cover;
+    z-index: 0;
+  }
+  .bento__tile .bento__content {
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column; gap: 1rem; height: 100%;
+    justify-content: space-between;
+  }
+  .bento__tile--photo::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(10,10,10,0.1) 35%, rgba(10,10,10,0.75) 100%);
+    z-index: 1;
+  }
+  .bento__tile--photo .bento__content { color: #fff; }
+
+  .bento__title { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.015em; line-height: 1.2; }
+  .bento__tile--lg .bento__title { font-size: clamp(1.75rem, 2.8vw, 2.25rem); }
+  .bento__excerpt { font-size: 0.95rem; line-height: 1.55; opacity: 0.9; }
+  .bento__meta { display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; opacity: 0.85; }
+
+  .bento__tile--orange {
+    background: linear-gradient(135deg, var(--color-brand-orange) 0%, var(--color-brand-orange-light) 100%);
+    color: #fff;
+  }
+  .bento__tile--green {
+    background: linear-gradient(135deg, var(--color-brand-green-dark) 0%, var(--color-brand-green) 100%);
+    color: #fff;
+  }
+  .bento__tile--ink {
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+    color: #fff;
+  }
+  .bento__tile--soft {
+    background: var(--color-surface-soft);
+    border: 1px solid var(--color-border-soft);
+  }
+  .bento__tile--soft .bento__title { color: var(--color-ink-soft); }
+  .bento__tile--soft .bento__excerpt { color: color-mix(in srgb, var(--color-ink) 65%, transparent); }
+
+  .bento__tile--dots::before {
+    content: ""; position: absolute; inset: 0; z-index: 0;
+    background-image: radial-gradient(rgba(255,255,255,0.18) 1px, transparent 1.5px);
+    background-size: 18px 18px;
+  }
+
+  .bento__pill {
+    display: inline-flex; align-items: center;
+    padding: 0.35rem 0.7rem;
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(6px);
+    border-radius: 999px;
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    align-self: flex-start;
+  }
+  .bento__pill--ink { background: rgba(10,10,10,0.08); color: var(--color-ink); }
+
+  /* Topic tiles section */
+  .topics {
+    padding-block: 5rem;
+  }
+  .topics__grid {
+    display: grid; grid-template-columns: repeat(6, 1fr); gap: 1rem;
+  }
+  @media (max-width: 1024px) { .topics__grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 640px)  { .topics__grid { grid-template-columns: repeat(2, 1fr); } }
+  .topic {
+    padding: 1.5rem 1.25rem;
+    background: #fff;
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-xl);
+    display: flex; flex-direction: column; gap: 0.75rem;
+    transition: all 0.3s ease;
+  }
+  .topic:hover { transform: translateY(-4px); box-shadow: var(--shadow-elevated); border-color: color-mix(in srgb, var(--color-brand-orange) 35%, var(--color-border-soft)); }
+  .topic__icon {
+    width: 2.75rem; height: 2.75rem;
+    border-radius: var(--radius-md);
+    background: color-mix(in srgb, var(--color-brand-orange) 10%, transparent);
+    color: var(--color-brand-orange);
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .topic:nth-child(2n) .topic__icon { background: color-mix(in srgb, var(--color-brand-green) 12%, transparent); color: var(--color-brand-green-dark); }
+  .topic:nth-child(3n) .topic__icon { background: color-mix(in srgb, var(--color-ink) 8%, transparent); color: var(--color-ink); }
+  .topic__title { font-size: 0.98rem; font-weight: 800; letter-spacing: -0.005em; color: var(--color-ink-soft); }
+  .topic__count { font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: color-mix(in srgb, var(--color-ink) 55%, transparent); }
+
+  /* Checklist + quote two-up */
+  .combo {
+    padding-block: 0 5rem;
+    display: grid; grid-template-columns: 1.2fr 1fr; gap: 1.25rem;
+  }
+  @media (max-width: 900px) { .combo { grid-template-columns: 1fr; } }
+
+  .checklist-card {
+    position: relative;
+    padding: 2rem;
+    background:
+      radial-gradient(80% 100% at 100% 0%, color-mix(in srgb, var(--color-brand-orange) 10%, transparent) 0%, transparent 60%),
+      var(--color-surface-soft);
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-2xl);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+  @media (max-width: 640px) { .checklist-card { grid-template-columns: 1fr; padding: 1.5rem; } }
+  .checklist-card__title { font-size: 1.5rem; font-weight: 900; letter-spacing: -0.015em; color: var(--color-ink-soft); margin-top: 0.75rem; line-height: 1.15; }
+  .checklist-card__desc { font-size: 0.95rem; line-height: 1.6; color: color-mix(in srgb, var(--color-ink) 65%, transparent); margin-top: 0.55rem; }
+  .checklist-card__preview {
+    background: #fff;
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-xl);
+    padding: 1.25rem;
+    box-shadow: var(--shadow-soft);
+    font-size: 0.88rem;
+  }
+  .checklist-card__preview h5 { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 800; color: color-mix(in srgb, var(--color-ink) 55%, transparent); margin: 0 0 0.65rem; }
+  .checklist-card__items { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.55rem; }
+  .checklist-card__items li { display: flex; gap: 0.55rem; align-items: center; font-weight: 600; color: var(--color-ink-soft); }
+  .checklist-card__check {
+    width: 1rem; height: 1rem; border-radius: 999px;
+    background: var(--color-brand-green); color: #fff;
+    display: inline-flex; align-items:center; justify-content:center;
+    font-size: 0.65rem; flex-shrink: 0;
+  }
+  .checklist-card__items li.muted { color: color-mix(in srgb, var(--color-ink) 45%, transparent); text-decoration: line-through; text-decoration-color: color-mix(in srgb, var(--color-ink) 20%, transparent); }
+  .checklist-card__items li.muted .checklist-card__check { background: transparent; border: 1.5px solid color-mix(in srgb, var(--color-ink) 25%, transparent); color: transparent; }
+
+  .quote-stat {
+    padding: 2rem;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+    color: #fff;
+    border-radius: var(--radius-2xl);
+    position: relative;
+    overflow: hidden;
+  }
+  .quote-stat::before {
+    content: "";
+    position: absolute; right: -20%; top: -30%;
+    width: 25rem; height: 25rem; border-radius: 50%;
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--color-brand-orange) 45%, transparent), transparent);
+    filter: blur(8px);
+  }
+  .quote-stat__body { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 1.25rem; height: 100%; }
+  .quote-stat__quote-mark { font-family: Georgia, serif; font-weight: 900; font-size: 4rem; line-height: 0.2; color: var(--color-brand-orange); }
+  .quote-stat__text { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.01em; line-height: 1.4; }
+  .quote-stat__author { font-size: 0.82rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: rgba(255,255,255,0.6); }
+  .quote-stat__divider { height: 1px; background: rgba(255,255,255,0.12); }
+  .quote-stat__numbers { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .quote-stat__num-val { font-size: 2.25rem; font-weight: 900; letter-spacing: -0.03em; line-height: 1; }
+  .quote-stat__num-val span { color: var(--color-brand-orange-light); }
+  .quote-stat__num-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; color: rgba(255,255,255,0.55); margin-top: 0.35rem; }
+
+  /* Field stories strip */
+  .field {
+    padding-block: 0 5rem;
+  }
+  .field__head { display: flex; align-items: end; justify-content: space-between; gap: 2rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+  .field__track {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+  }
+  @media (max-width: 1024px) { .field__track { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 640px)  { .field__track { grid-template-columns: 1fr; } }
+  .field__card {
+    position: relative;
+    aspect-ratio: 3/4;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    background: #222;
+  }
+  .field__card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+  .field__card:hover img { transform: scale(1.06); }
+  .field__card::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(10,10,10,0) 40%, rgba(10,10,10,0.85) 100%);
+  }
+  .field__card-body { position: absolute; left: 1rem; right: 1rem; bottom: 1rem; color: #fff; z-index: 2; }
+  .field__tag { display: inline-block; padding: 0.3rem 0.65rem; background: rgba(255,255,255,0.15); border-radius: 999px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; backdrop-filter: blur(6px); }
+  .field__title { font-size: 1.05rem; font-weight: 800; letter-spacing: -0.01em; line-height: 1.25; margin-top: 0.5rem; }
+  .field__meta { font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; opacity: 0.8; margin-top: 0.35rem; }
+
+  /* Big closing CTA */
+  .closer {
+    padding: clamp(3rem, 6vw, 5rem);
+    border-radius: var(--radius-3xl);
+    position: relative;
+    overflow: hidden;
+    background:
+      radial-gradient(80% 120% at 0% 100%, color-mix(in srgb, var(--color-brand-orange) 32%, transparent) 0%, transparent 60%),
+      linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 55%, #2a1a07 100%);
+    color: #fff;
+    text-align: center;
+  }
+  .closer::before {
+    content: ""; position: absolute; inset: 0;
+    background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1.5px);
+    background-size: 22px 22px;
+  }
+  .closer > * { position: relative; z-index: 1; }
+  .closer h3 { font-size: clamp(2rem, 4.5vw, 3.5rem); font-weight: 900; letter-spacing: -0.03em; line-height: 1.04; margin: 0.75rem auto 0; max-width: 24ch; }
+  .closer p { max-width: 36rem; margin: 1rem auto 2rem; color: rgba(255,255,255,0.7); line-height: 1.6; font-size: 1.1rem; }
+  .closer__actions { display: inline-flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center; }
+
+</style>
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header class="mz-header">
+  <div class="page-shell mz-header__inner">
+    <a href="#" class="mz-logo">
+      <span class="mz-logo__mark">M</span>
+      <span>MoveZilla<span style="color: var(--color-brand-orange);">.</span></span>
+    </a>
+    <nav class="mz-nav" aria-label="Primary">
+      <a href="#">Process</a>
+      <a href="#">Services</a>
+      <a href="#">Reviews</a>
+      <a href="#" class="is-active">Playbook</a>
+      <a href="#">Gallery</a>
+      <a href="#">Contact</a>
+    </nav>
+    <div class="mz-header__cta">
+      <a href="tel:+13126265980" class="mz-phone">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2A19.9 19.9 0 0 1 11 18.3a19.5 19.5 0 0 1-6.1-6.1A19.9 19.9 0 0 1 1.1 4.2 2 2 0 0 1 3.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.7a2 2 0 0 1-.5 2l-1.3 1.3a16 16 0 0 0 6.1 6.1l1.3-1.3a2 2 0 0 1 2-.5c.9.3 1.8.5 2.7.6A2 2 0 0 1 22 16.9z"/></svg>
+        (312) 626-5980
+      </a>
+      <a href="#" class="cta-primary" style="padding: 0.65rem 1.15rem; font-size: 0.78rem;">Get Free Estimate</a>
+    </div>
+  </div>
+</header>
+
+<!-- ============ BENTO HERO ============ -->
+<section class="v4-hero">
+  <div class="page-shell">
+    <div class="v4-hero__head">
+      <div>
+        <span class="kicker" style="margin-bottom: 1.25rem;">The MoveZilla Playbook</span>
+        <h1 class="v4-hero__title">Everything you wish someone had told you <em>before move day.</em></h1>
+      </div>
+      <div class="v4-hero__side">
+        <p>Checklists, pricing honesty, and photos from the crew. Pick a tile — each one opens the playbook we actually use in the field.</p>
+        <div style="display:flex; gap: 0.5rem; flex-wrap: wrap;">
+          <a href="#" class="cta-primary">Get Free Estimate</a>
+          <a href="#topics" class="cta-secondary">Browse Topics</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="bento">
+
+      <!-- Large feature tile (photo) -->
+      <a href="#" class="bento__tile bento__tile--lg bento__tile--photo">
+        <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1400&q=80" alt="" onerror="this.style.display='none'" />
+        <div class="bento__content">
+          <div class="bento__pill">Featured Story</div>
+          <div>
+            <div class="bento__meta">Pricing · 14 min read</div>
+            <div class="bento__title" style="margin-top: 0.4rem;">What flat-binding really means — and the four charges you should never see on an invoice.</div>
+          </div>
+        </div>
+      </a>
+
+      <!-- Orange tile -->
+      <a href="#" class="bento__tile bento__tile--orange bento__tile--dots">
+        <div class="bento__content">
+          <div class="bento__pill">Free Download</div>
+          <div>
+            <div class="bento__title">6-Week Seller Checklist.</div>
+            <div class="bento__meta" style="margin-top: 0.5rem;">PDF · 1 page · Printable</div>
+          </div>
+        </div>
+      </a>
+
+      <!-- Soft tile -->
+      <a href="#" class="bento__tile bento__tile--soft">
+        <div class="bento__content">
+          <div class="bento__pill bento__pill--ink">Playbook</div>
+          <div>
+            <div class="bento__title">Pack a kitchen in a day.</div>
+            <div class="bento__excerpt" style="margin-top: 0.4rem;">The order we pack in, and the three items we wrap by hand.</div>
+          </div>
+          <span class="mz-read-more">Read playbook</span>
+        </div>
+      </a>
+
+      <!-- Green tile -->
+      <a href="#" class="bento__tile bento__tile--green">
+        <div class="bento__content">
+          <div class="bento__pill">Case Study</div>
+          <div>
+            <div class="bento__title">DC → Chicago in 36 hours.</div>
+            <div class="bento__meta" style="margin-top: 0.4rem;">Long distance · Field report</div>
+          </div>
+        </div>
+      </a>
+
+      <!-- Wide photo tile -->
+      <a href="#" class="bento__tile bento__tile--wide bento__tile--photo">
+        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=80" alt="" onerror="this.style.display='none'" />
+        <div class="bento__content">
+          <div class="bento__pill">Video</div>
+          <div>
+            <div class="bento__meta">Closing Day · 6 min</div>
+            <div class="bento__title" style="margin-top: 0.4rem;">The last 12 hours before keys exchange — narrated by our crew lead.</div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TOPIC TILES ============ -->
+<section id="topics" class="topics">
+  <div class="page-shell">
+    <div style="display:flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: 1.75rem; flex-wrap: wrap;">
+      <div>
+        <div class="label-overline" style="margin-bottom: 0.5rem;">Browse by topic</div>
+        <h2 class="text-heading-2">Pick the question on your mind.</h2>
+      </div>
+      <a href="#" class="mz-read-more">All 142 guides</a>
+    </div>
+
+    <div class="topics__grid">
+      <a href="#" class="topic">
+        <div class="topic__icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>
+        </div>
+        <div class="topic__title">Packing &amp; Prep</div>
+        <div class="topic__count">38 Articles</div>
+      </a>
+      <a href="#" class="topic">
+        <div class="topic__icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9 12 2l9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
+        </div>
+        <div class="topic__title">Selling Your Home</div>
+        <div class="topic__count">24 Articles</div>
+      </a>
+      <a href="#" class="topic">
+        <div class="topic__icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 17h4V5H2v12h3"/><path d="M20 17h2v-3.34a4 4 0 0 0-1.17-2.83L19 9h-5v8h2"/><circle cx="7.5" cy="17.5" r="2.5"/><circle cx="17.5" cy="17.5" r="2.5"/></svg>
+        </div>
+        <div class="topic__title">Long Distance</div>
+        <div class="topic__count">19 Articles</div>
+      </a>
+      <a href="#" class="topic">
+        <div class="topic__icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/><path d="M8 4v5"/><path d="M16 4v5"/></svg>
+        </div>
+        <div class="topic__title">Storage &amp; Gap Week</div>
+        <div class="topic__count">11 Articles</div>
+      </a>
+      <a href="#" class="topic">
+        <div class="topic__icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="m17 5-10 0"/><path d="m17 5 5 3-5 3-10 0-5-3 5-3"/><path d="m7 11 0 6"/><path d="m17 11 0 6"/><path d="m7 17 10 0"/></svg>
+        </div>
+        <div class="topic__title">Pricing &amp; Estimates</div>
+        <div class="topic__count">27 Articles</div>
+      </a>
+      <a href="#" class="topic">
+        <div class="topic__icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        </div>
+        <div class="topic__title">Closing Day</div>
+        <div class="topic__count">23 Articles</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CHECKLIST + QUOTE ============ -->
+<section style="padding-bottom: 5rem;">
+  <div class="page-shell">
+    <div class="combo" style="padding-block: 0;">
+      <article class="checklist-card">
+        <div>
+          <span class="kicker">Free PDF Download</span>
+          <h3 class="checklist-card__title">The 6-week seller's checklist — the exact calendar our crews recommend.</h3>
+          <p class="checklist-card__desc">Printable, one page, worked backward from closing day. Including the Tuesday-of calls and the one donation pickup families always forget.</p>
+          <div style="display: flex; gap: 0.5rem; margin-top: 1.25rem; flex-wrap: wrap;">
+            <a href="#" class="cta-primary">Download the PDF</a>
+            <a href="#" class="cta-secondary">See all 12 checklists</a>
+          </div>
+        </div>
+        <aside class="checklist-card__preview">
+          <h5>Week -6 · Listing Week</h5>
+          <ul class="checklist-card__items">
+            <li><span class="checklist-card__check">✓</span>Photograph every room before staging</li>
+            <li><span class="checklist-card__check">✓</span>Schedule donation pickup (Mon/Wed)</li>
+            <li><span class="checklist-card__check">✓</span>Pull building move-in certificates</li>
+            <li class="muted"><span class="checklist-card__check"></span>Book dumpster for week -3</li>
+            <li class="muted"><span class="checklist-card__check"></span>Book MoveZilla in-home estimate</li>
+          </ul>
+        </aside>
+      </article>
+
+      <aside class="quote-stat">
+        <div class="quote-stat__body">
+          <div>
+            <span class="quote-stat__quote-mark">“</span>
+            <p class="quote-stat__text">They were priced better than most competitors and were quick and efficient. Would recommend to anyone looking for a reliable moving company.</p>
+            <div class="quote-stat__author" style="margin-top: 1rem;">Dan D. · DC → Philadelphia</div>
+          </div>
+          <div class="quote-stat__divider"></div>
+          <div class="quote-stat__numbers">
+            <div>
+              <div class="quote-stat__num-val">4.9<span>/5</span></div>
+              <div class="quote-stat__num-label">120+ reviews</div>
+            </div>
+            <div>
+              <div class="quote-stat__num-val">2,028<span>+</span></div>
+              <div class="quote-stat__num-label">moves completed</div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FIELD STORIES ============ -->
+<section class="field">
+  <div class="page-shell">
+    <div class="field__head">
+      <div>
+        <div class="label-overline" style="margin-bottom: 0.5rem;">Field Stories</div>
+        <h2 class="text-heading-2">Photos from the truck.</h2>
+        <p class="text-copy" style="max-width: 44rem; margin-top: 0.5rem;">Weekly dispatches from our crew leads — packing jobs, tricky stairwells, and the moves that went exactly right.</p>
+      </div>
+      <a href="#" class="cta-secondary">All field stories</a>
+    </div>
+    <div class="field__track">
+      <a href="#" class="field__card">
+        <img src="https://images.unsplash.com/photo-1564078516393-cf04bd966897?auto=format&fit=crop&w=900&q=80" alt="" onerror="this.style.display='none'"/>
+        <div class="field__card-body">
+          <span class="field__tag">Lincoln Park</span>
+          <div class="field__title">3-flat stairwell + a baby grand. How we rigged it.</div>
+          <div class="field__meta">Crew · Apr 11</div>
+        </div>
+      </a>
+      <a href="#" class="field__card">
+        <img src="https://images.unsplash.com/photo-1505692794403-34d4982f88aa?auto=format&fit=crop&w=900&q=80" alt="" onerror="this.style.display='none'"/>
+        <div class="field__card-body">
+          <span class="field__tag">Bethesda</span>
+          <div class="field__title">Packing an art collection — with the owner watching.</div>
+          <div class="field__meta">Packing · Apr 06</div>
+        </div>
+      </a>
+      <a href="#" class="field__card">
+        <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=900&q=80" alt="" onerror="this.style.display='none'"/>
+        <div class="field__card-body">
+          <span class="field__tag">Alexandria</span>
+          <div class="field__title">Closing day at 4pm. Keys exchanged at 3:52.</div>
+          <div class="field__meta">Closing · Mar 29</div>
+        </div>
+      </a>
+      <a href="#" class="field__card">
+        <img src="https://images.unsplash.com/photo-1528844190345-e56b1f5b2af3?auto=format&fit=crop&w=900&q=80" alt="" onerror="this.style.display='none'"/>
+        <div class="field__card-body">
+          <span class="field__tag">West Loop</span>
+          <div class="field__title">200 boxes, 4 floors, 7 hours. No scratches.</div>
+          <div class="field__meta">Crew · Mar 22</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CLOSING CTA ============ -->
+<section style="padding-bottom: 5rem;">
+  <div class="page-shell">
+    <div class="closer">
+      <span class="kicker" style="background-image: linear-gradient(to right, rgba(255,255,255,0.15), rgba(255,255,255,0.05)); border: 1px solid rgba(255,255,255,0.15);">Your move starts here</span>
+      <h3>Free in-home estimate. Written binding quote. Same day.</h3>
+      <p>We'll walk through your home, measure cubic feet, and leave a flat-binding estimate you can book — or not — with zero pressure.</p>
+      <div class="closer__actions">
+        <a href="#" class="cta-primary cta-primary--lg">Book Free Estimate</a>
+        <a href="tel:+13126265980" style="display:inline-flex; align-items:center; gap:0.5rem; padding: 1rem 1.75rem; border-radius: var(--radius-xl); border: 1px solid rgba(255,255,255,0.25); color: #fff; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; font-size: 0.875rem;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2A19.9 19.9 0 0 1 11 18.3a19.5 19.5 0 0 1-6.1-6.1A19.9 19.9 0 0 1 1.1 4.2 2 2 0 0 1 3.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.7a2 2 0 0 1-.5 2l-1.3 1.3a16 16 0 0 0 6.1 6.1l1.3-1.3a2 2 0 0 1 2-.5c.9.3 1.8.5 2.7.6A2 2 0 0 1 22 16.9z"/></svg>
+          (312) 626-5980
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="mz-footer">
+  <div class="page-shell">
+    <div class="mz-footer__grid">
+      <div>
+        <a href="#" class="mz-logo" style="color: #fff;">
+          <span class="mz-logo__mark">M</span>
+          <span>MoveZilla<span style="color: var(--color-brand-orange-light);">.</span></span>
+        </a>
+        <p style="color: rgba(255,255,255,0.6); margin-top: 1rem; max-width: 22rem; font-size: 0.9rem; line-height: 1.6;">
+          Flat-binding estimates and full-service moves for home sellers across Chicago and the DMV.
+        </p>
+        <div class="mz-footer__badges" style="margin-top: 1.25rem;">
+          <span class="mz-footer__badge">FMCSA Licensed</span>
+          <span class="mz-footer__badge">ProMover Certified</span>
+        </div>
+      </div>
+      <div>
+        <h4>Services</h4>
+        <ul class="mz-footer__list">
+          <li><a href="#">Local Moving</a></li>
+          <li><a href="#">Long Distance</a></li>
+          <li><a href="#">Packing Services</a></li>
+          <li><a href="#">Storage</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Playbook</h4>
+        <ul class="mz-footer__list">
+          <li><a href="#">Topics</a></li>
+          <li><a href="#">Checklists</a></li>
+          <li><a href="#">Field Stories</a></li>
+          <li><a href="#">Videos</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul class="mz-footer__list">
+          <li><a href="tel:+13126265980">(312) 626-5980</a></li>
+          <li><a href="mailto:office@movezillamoving.com">office@movezillamoving.com</a></li>
+          <li><a href="#">Chicago, IL</a></li>
+          <li><a href="#">Washington, DC</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="mz-footer__legal">
+      <div>© 2026 MoveZilla Moving · All rights reserved</div>
+      <div style="display:flex; gap: 1.5rem;">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Accessibility</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

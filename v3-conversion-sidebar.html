@@ -1,0 +1,707 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Moving Guides — MoveZilla Moving</title>
+<meta name="description" content="Checklists, calendars, and local-market insights for home sellers — with a free in-home estimate one click away." />
+<meta name="theme-color" content="#0a0a0a" />
+<link rel="stylesheet" href="./shared/tokens.css" />
+<style>
+  /* ============================================================
+     V3 — CONVERSION-AWARE SIDEBAR
+     Concept: Content on the left, lead engine on the right. A
+     sticky estimate form + trust stack + popular articles rail
+     keeps the CTA on screen the entire read. Mid-page banners,
+     short-form lead magnet, and a service-area picker push
+     blog visitors toward becoming estimates.
+     ============================================================ */
+
+  .v3-hero {
+    padding-block: 3rem 2rem;
+    background:
+      radial-gradient(80% 60% at 8% 0%, color-mix(in srgb, var(--color-brand-orange) 10%, transparent) 0%, transparent 60%),
+      var(--color-surface-soft);
+    border-bottom: 1px solid var(--color-border-soft);
+  }
+  .v3-hero__crumbs {
+    font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700;
+    color: color-mix(in srgb, var(--color-ink) 55%, transparent);
+    display: flex; gap: 0.6rem; align-items: center;
+    margin-bottom: 1rem;
+  }
+  .v3-hero__crumbs a:hover { color: var(--color-brand-orange); }
+  .v3-hero__crumbs .sep { opacity: 0.4; }
+  .v3-hero__title {
+    font-size: clamp(2rem, 4vw, 3.25rem);
+    font-weight: 900; letter-spacing: -0.025em; line-height: 1.05;
+    max-width: 52rem;
+    color: var(--color-ink-soft);
+  }
+  .v3-hero__title em { font-style: normal; background-image: linear-gradient(to right, var(--color-brand-orange), var(--color-brand-orange-light)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .v3-hero__lede { max-width: 44rem; margin-top: 0.85rem; font-size: 1.1rem; line-height: 1.6; color: color-mix(in srgb, var(--color-ink) 65%, transparent); }
+  .v3-hero__stats {
+    margin-top: 2rem;
+    display: flex; gap: 1rem; flex-wrap: wrap;
+  }
+  .v3-hero__stat {
+    display: inline-flex; align-items: center; gap: 0.55rem;
+    padding: 0.55rem 0.95rem;
+    background: #fff;
+    border: 1px solid var(--color-border-soft);
+    border-radius: 999px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    box-shadow: var(--shadow-soft);
+  }
+  .v3-hero__stat strong { color: var(--color-brand-orange); font-weight: 900; }
+
+  /* Main grid: content + sticky sidebar */
+  .v3-main {
+    padding-block: 3rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 22rem;
+    gap: 3rem;
+  }
+  @media (max-width: 1024px) { .v3-main { grid-template-columns: 1fr; gap: 2rem; } }
+
+  .v3-content { min-width: 0; }
+
+  .v3-filter-bar {
+    display: flex; align-items: center; gap: 0.75rem;
+    padding: 0.75rem;
+    background: #fff;
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-xl);
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .v3-filter-bar__label {
+    font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 800;
+    color: color-mix(in srgb, var(--color-ink) 55%, transparent);
+    padding-left: 0.75rem;
+  }
+  .v3-filter-bar__chips { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+  .v3-filter-bar__chips button {
+    cursor: pointer; font-family: inherit;
+    padding: 0.45rem 0.9rem;
+    border: 1px solid var(--color-border-soft);
+    background: #fff;
+    border-radius: 999px;
+    font-size: 0.8rem; font-weight: 700;
+    color: color-mix(in srgb, var(--color-ink) 70%, transparent);
+    transition: all 0.2s ease;
+  }
+  .v3-filter-bar__chips button:hover { border-color: var(--color-brand-orange); color: var(--color-brand-orange); }
+  .v3-filter-bar__chips button.is-on { background: var(--color-ink); color: #fff; border-color: var(--color-ink); }
+  .v3-filter-bar__sort { margin-left: auto; font-size: 0.8rem; font-weight: 700; color: color-mix(in srgb, var(--color-ink) 70%, transparent); cursor: pointer; display:inline-flex; align-items:center; gap:0.4rem; }
+
+  /* Article list: 2-col cards */
+  .v3-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+  @media (max-width: 640px) { .v3-grid { grid-template-columns: 1fr; } }
+  .v3-grid--wide > * { grid-column: span 2; }
+  @media (max-width: 640px) { .v3-grid--wide > * { grid-column: auto; } }
+
+  .v3-card {
+    display: flex; flex-direction: column;
+    background: #fff;
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+  .v3-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-elevated); border-color: color-mix(in srgb, var(--color-brand-orange) 35%, var(--color-border-soft)); }
+  .v3-card__image { aspect-ratio: 16/9; background: var(--color-surface-soft); overflow: hidden; }
+  .v3-card__image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+  .v3-card:hover .v3-card__image img { transform: scale(1.04); }
+  .v3-card__body { padding: 1.25rem 1.25rem 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; flex: 1; }
+  .v3-card__meta { display: flex; align-items: center; gap: 0.6rem; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: color-mix(in srgb, var(--color-ink) 55%, transparent); }
+  .v3-card__title { font-size: 1.15rem; font-weight: 800; letter-spacing: -0.01em; line-height: 1.3; color: var(--color-ink-soft); }
+  .v3-card__excerpt { font-size: 0.9rem; line-height: 1.55; color: color-mix(in srgb, var(--color-ink) 62%, transparent); }
+  .v3-card__footer { margin-top: auto; padding-top: 0.75rem; border-top: 1px solid var(--color-border-soft); display: flex; justify-content: space-between; align-items: center; }
+  .v3-card__author { display: flex; align-items: center; gap: 0.45rem; font-size: 0.78rem; font-weight: 700; }
+  .v3-card__author-chip { width: 1.6rem; height: 1.6rem; border-radius: 999px; background: var(--color-ink); color: #fff; display: inline-flex; align-items:center; justify-content:center; font-size: 0.7rem; font-weight: 900; }
+
+  /* Lead card */
+  .v3-card--lead {
+    grid-column: span 2;
+    display: grid; grid-template-columns: 1.1fr 1fr; gap: 0;
+    background: linear-gradient(180deg, #fff 0%, var(--color-surface-soft) 100%);
+  }
+  @media (max-width: 640px) { .v3-card--lead { grid-template-columns: 1fr; } }
+  .v3-card--lead .v3-card__image { aspect-ratio: 4/3; }
+  .v3-card--lead .v3-card__title { font-size: 1.6rem; }
+
+  /* Inline CTA banner between rows */
+  .v3-banner {
+    grid-column: span 2;
+    display: grid; grid-template-columns: 1fr auto; gap: 1.5rem;
+    align-items: center;
+    padding: 1.5rem 1.75rem;
+    background:
+      radial-gradient(60% 120% at 100% 0%, color-mix(in srgb, var(--color-brand-orange) 18%, transparent), transparent 60%),
+      var(--color-ink);
+    color: #fff;
+    border-radius: var(--radius-2xl);
+    position: relative;
+    overflow: hidden;
+  }
+  @media (max-width: 640px) { .v3-banner { grid-template-columns: 1fr; grid-column: auto; } }
+  .v3-banner h3 { font-size: 1.3rem; font-weight: 800; letter-spacing: -0.01em; line-height: 1.2; margin: 0.25rem 0 0; }
+  .v3-banner p { color: rgba(255,255,255,0.7); margin-top: 0.4rem; font-size: 0.92rem; line-height: 1.5; max-width: 36rem; }
+  .v3-banner .label-overline { color: var(--color-brand-orange-light); }
+
+  /* Pagination */
+  .v3-pagination { margin-top: 2rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+  .v3-pagination__info { font-size: 0.85rem; color: color-mix(in srgb, var(--color-ink) 60%, transparent); }
+  .v3-pagination__actions { display: flex; gap: 0.5rem; }
+  .v3-pagination__actions .cta-secondary { padding: 0.6rem 1.15rem; }
+
+  /* Sidebar */
+  .v3-sidebar {
+    position: relative;
+  }
+  .v3-sidebar__sticky {
+    position: sticky;
+    top: 5.25rem; /* below header */
+    display: flex; flex-direction: column; gap: 1.25rem;
+  }
+  .v3-module {
+    background: #fff;
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-xl);
+    padding: 1.25rem 1.25rem 1.5rem;
+  }
+  .v3-module__title {
+    font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 800;
+    color: color-mix(in srgb, var(--color-ink) 60%, transparent);
+    margin-bottom: 0.85rem;
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .v3-module__title::before {
+    content: ""; width: 6px; height: 6px; border-radius: 999px; background: var(--color-brand-orange);
+  }
+
+  /* Estimate form module */
+  .v3-estimate {
+    background:
+      radial-gradient(80% 120% at 0% 0%, color-mix(in srgb, var(--color-brand-orange) 10%, transparent) 0%, transparent 60%),
+      #fff;
+    border: 1px solid color-mix(in srgb, var(--color-brand-orange) 25%, var(--color-border-soft));
+    box-shadow: var(--shadow-elevated);
+  }
+  .v3-estimate h4 { font-size: 1.2rem; font-weight: 900; letter-spacing: -0.015em; line-height: 1.2; }
+  .v3-estimate p { font-size: 0.85rem; color: color-mix(in srgb, var(--color-ink) 65%, transparent); margin-top: 0.4rem; line-height: 1.55; }
+  .v3-estimate form { display: flex; flex-direction: column; gap: 0.7rem; margin-top: 1rem; }
+  .v3-field {
+    display: flex; flex-direction: column; gap: 0.3rem;
+  }
+  .v3-field label { font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 800; color: color-mix(in srgb, var(--color-ink) 60%, transparent); }
+  .v3-field input, .v3-field select {
+    font-family: inherit;
+    padding: 0.75rem 0.85rem;
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-md);
+    font-size: 0.9rem;
+    background: #fff;
+    color: var(--color-ink);
+    outline: none;
+    transition: border-color 0.2s ease;
+  }
+  .v3-field input:focus, .v3-field select:focus { border-color: var(--color-brand-orange); }
+  .v3-estimate__row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+  .v3-estimate__trust {
+    margin-top: 0.75rem;
+    font-size: 0.72rem;
+    color: color-mix(in srgb, var(--color-ink) 55%, transparent);
+    display: flex; align-items: center; gap: 0.4rem;
+  }
+  .v3-estimate__trust svg { color: var(--color-brand-green); }
+
+  /* Popular rail */
+  .v3-popular-list { display: flex; flex-direction: column; gap: 0.25rem; }
+  .v3-popular-item {
+    display: grid; grid-template-columns: 1.5rem 1fr; gap: 0.75rem;
+    padding: 0.65rem 0;
+    border-top: 1px dashed color-mix(in srgb, var(--color-ink) 10%, transparent);
+  }
+  .v3-popular-item:first-child { border-top: 0; padding-top: 0; }
+  .v3-popular-item__num { font-weight: 900; font-size: 0.95rem; color: var(--color-brand-orange); letter-spacing: -0.01em; }
+  .v3-popular-item__title { font-weight: 700; font-size: 0.92rem; line-height: 1.4; color: var(--color-ink-soft); }
+  .v3-popular-item:hover .v3-popular-item__title { color: var(--color-brand-orange); }
+  .v3-popular-item__meta { font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: color-mix(in srgb, var(--color-ink) 55%, transparent); margin-top: 0.2rem; }
+
+  /* Service area picker */
+  .v3-areas { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+  .v3-areas a {
+    padding: 0.85rem 0.85rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--color-border-soft);
+    background: var(--color-surface-soft);
+    display: flex; flex-direction: column; gap: 0.2rem;
+    transition: all 0.2s ease;
+  }
+  .v3-areas a:hover { background: #fff; border-color: var(--color-brand-orange); transform: translateY(-2px); }
+  .v3-areas__city { font-weight: 800; font-size: 0.92rem; color: var(--color-ink); }
+  .v3-areas__count { font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; color: color-mix(in srgb, var(--color-ink) 55%, transparent); }
+
+  /* Trust mini-stack */
+  .v3-trust { padding: 1rem 1.1rem; background: #0a0a0a; color: #fff; border-radius: var(--radius-xl); }
+  .v3-trust__score {
+    font-size: 2.25rem; font-weight: 900; letter-spacing: -0.03em; line-height: 1;
+    background-image: linear-gradient(to right, var(--color-brand-orange), var(--color-brand-orange-light));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .v3-trust__score span { font-size: 1rem; color: rgba(255,255,255,0.5); vertical-align: super; }
+  .v3-trust__stars { color: var(--color-brand-orange); font-size: 0.95rem; letter-spacing: 0.1em; }
+  .v3-trust__quote { font-size: 0.82rem; line-height: 1.5; color: rgba(255,255,255,0.8); margin-top: 0.6rem; }
+  .v3-trust__author { margin-top: 0.5rem; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; color: rgba(255,255,255,0.55); }
+
+  /* Mobile sticky CTA */
+  .v3-mobile-cta {
+    display: none;
+    position: fixed; bottom: 1rem; left: 1rem; right: 1rem; z-index: 50;
+    background: #0a0a0a; color: #fff;
+    border-radius: var(--radius-xl);
+    padding: 0.75rem;
+    box-shadow: 0 12px 32px rgba(0,0,0,0.25);
+  }
+  .v3-mobile-cta__inner { display: grid; grid-template-columns: 1fr auto auto; gap: 0.5rem; align-items: center; }
+  .v3-mobile-cta__text { font-size: 0.82rem; font-weight: 700; line-height: 1.25; padding-left: 0.4rem; }
+  .v3-mobile-cta__text small { display: block; font-weight: 600; color: rgba(255,255,255,0.55); font-size: 0.7rem; letter-spacing: 0.06em; text-transform: uppercase; }
+  @media (max-width: 1024px) { .v3-mobile-cta { display: block; } }
+
+</style>
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header class="mz-header">
+  <div class="page-shell mz-header__inner">
+    <a href="#" class="mz-logo">
+      <span class="mz-logo__mark">M</span>
+      <span>MoveZilla<span style="color: var(--color-brand-orange);">.</span></span>
+    </a>
+    <nav class="mz-nav" aria-label="Primary">
+      <a href="#">Process</a>
+      <a href="#">Services</a>
+      <a href="#">Reviews</a>
+      <a href="#" class="is-active">Guides</a>
+      <a href="#">Gallery</a>
+      <a href="#">Contact</a>
+    </nav>
+    <div class="mz-header__cta">
+      <a href="tel:+13126265980" class="mz-phone">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2A19.9 19.9 0 0 1 11 18.3a19.5 19.5 0 0 1-6.1-6.1A19.9 19.9 0 0 1 1.1 4.2 2 2 0 0 1 3.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.7a2 2 0 0 1-.5 2l-1.3 1.3a16 16 0 0 0 6.1 6.1l1.3-1.3a2 2 0 0 1 2-.5c.9.3 1.8.5 2.7.6A2 2 0 0 1 22 16.9z"/></svg>
+        (312) 626-5980
+      </a>
+      <a href="#" class="cta-primary" style="padding: 0.65rem 1.15rem; font-size: 0.78rem;">Get Free Estimate</a>
+    </div>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="v3-hero">
+  <div class="page-shell">
+    <div class="v3-hero__crumbs">
+      <a href="#">MoveZilla</a>
+      <span class="sep">/</span>
+      <a href="#">Resources</a>
+      <span class="sep">/</span>
+      <span style="color: var(--color-brand-orange);">Guides</span>
+    </div>
+    <h1 class="v3-hero__title">Honest answers for every moving decision — and a <em>free estimate</em> one click away.</h1>
+    <p class="v3-hero__lede">Written by the crews who actually load the truck. Read the guide you need, then book the in-home walkthrough when you're ready.</p>
+    <div class="v3-hero__stats">
+      <span class="v3-hero__stat"><strong>4.9/5</strong> · 120+ reviews</span>
+      <span class="v3-hero__stat"><strong>2,028</strong> moves completed</span>
+      <span class="v3-hero__stat"><strong>0</strong> hidden fees</span>
+      <span class="v3-hero__stat"><strong>FMCSA</strong> Licensed &amp; Insured</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MAIN GRID ============ -->
+<section class="page-shell v3-main">
+
+  <!-- === LEFT: CONTENT === -->
+  <div class="v3-content">
+
+    <div class="v3-filter-bar" role="tablist">
+      <span class="v3-filter-bar__label">Topic</span>
+      <div class="v3-filter-bar__chips">
+        <button class="is-on">All</button>
+        <button>Packing</button>
+        <button>Selling</button>
+        <button>Long Distance</button>
+        <button>Storage</button>
+        <button>Pricing</button>
+        <button>Closing Day</button>
+      </div>
+      <div class="v3-filter-bar__sort">
+        Sort: Newest
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+      </div>
+    </div>
+
+    <div class="v3-grid">
+
+      <!-- Lead card -->
+      <article class="v3-card v3-card--lead">
+        <div class="v3-card__image">
+          <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80" alt="" onerror="this.style.display='none'"/>
+        </div>
+        <div class="v3-card__body">
+          <div style="display:flex; gap: 0.5rem; flex-wrap: wrap;">
+            <span class="mz-tag mz-tag--orange">Pricing</span>
+            <span class="mz-tag">Featured</span>
+          </div>
+          <h2 class="v3-card__title">What flat-binding really means — and why your “low” quote just went up $1,400.</h2>
+          <p class="v3-card__excerpt">A line-by-line annotation of a real MoveZilla estimate, with footnotes on the four charges you should never see on a moving invoice.</p>
+          <div class="v3-card__footer">
+            <div class="v3-card__author">
+              <div class="v3-card__author-chip">SR</div>
+              <span>Srdan M-R · 14 min read</span>
+            </div>
+            <span class="mz-read-more" style="font-size: 0.72rem;">Read guide</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Standard cards -->
+      <article class="v3-card">
+        <div class="v3-card__image">
+          <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80" alt="" onerror="this.style.display='none'"/>
+        </div>
+        <div class="v3-card__body">
+          <div class="v3-card__meta">
+            <span class="mz-tag mz-tag--green">Selling</span>
+            <span>·</span>
+            <span>9 min</span>
+          </div>
+          <h3 class="v3-card__title">The six-week home seller's checklist.</h3>
+          <p class="v3-card__excerpt">Donation pickups, stager prep, dumpster pulls — all on one calendar.</p>
+          <div class="v3-card__footer">
+            <div class="v3-card__author"><div class="v3-card__author-chip">MH</div>Maya Holt</div>
+            <span style="font-size: 0.72rem; color: color-mix(in srgb, var(--color-ink) 55%, transparent); font-weight: 700;">Apr 09</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="v3-card">
+        <div class="v3-card__image">
+          <img src="https://images.unsplash.com/photo-1528844190345-e56b1f5b2af3?auto=format&fit=crop&w=800&q=80" alt="" onerror="this.style.display='none'"/>
+        </div>
+        <div class="v3-card__body">
+          <div class="v3-card__meta">
+            <span class="mz-tag">Packing</span>
+            <span>·</span>
+            <span>6 min</span>
+          </div>
+          <h3 class="v3-card__title">Pack a kitchen in under a day.</h3>
+          <p class="v3-card__excerpt">The order we pack in — stems up, wrap by hand, heaviest at the bottom.</p>
+          <div class="v3-card__footer">
+            <div class="v3-card__author"><div class="v3-card__author-chip">JP</div>Jake Park</div>
+            <span style="font-size: 0.72rem; color: color-mix(in srgb, var(--color-ink) 55%, transparent); font-weight: 700;">Apr 09</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Banner -->
+      <aside class="v3-banner">
+        <div>
+          <div class="label-overline">Free Tool</div>
+          <h3>Get a written flat-binding estimate in your kitchen.</h3>
+          <p>We walk through the house, measure cubic feet, and leave a written binding quote — all within an hour. No charge, no commitment.</p>
+        </div>
+        <a href="#" class="cta-primary" style="white-space: nowrap;">Book Free Estimate</a>
+      </aside>
+
+      <article class="v3-card">
+        <div class="v3-card__image">
+          <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=800&q=80" alt="" onerror="this.style.display='none'"/>
+        </div>
+        <div class="v3-card__body">
+          <div class="v3-card__meta">
+            <span class="mz-tag mz-tag--orange">Long Distance</span>
+            <span>·</span>
+            <span>12 min</span>
+          </div>
+          <h3 class="v3-card__title">DMV to Chicago: the 750-mile playbook.</h3>
+          <p class="v3-card__excerpt">Why we plan around Pennsylvania tolls, not weather — and how we price the overnight.</p>
+          <div class="v3-card__footer">
+            <div class="v3-card__author"><div class="v3-card__author-chip">SR</div>Srdan M-R</div>
+            <span style="font-size: 0.72rem; color: color-mix(in srgb, var(--color-ink) 55%, transparent); font-weight: 700;">Mar 28</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="v3-card">
+        <div class="v3-card__image">
+          <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=800&q=80" alt="" onerror="this.style.display='none'"/>
+        </div>
+        <div class="v3-card__body">
+          <div class="v3-card__meta">
+            <span class="mz-tag">Storage</span>
+            <span>·</span>
+            <span>5 min</span>
+          </div>
+          <h3 class="v3-card__title">The “gap week” between closings.</h3>
+          <p class="v3-card__excerpt">Climate-controlled vs. warehouse storage, plus the inventory spreadsheet we share.</p>
+          <div class="v3-card__footer">
+            <div class="v3-card__author"><div class="v3-card__author-chip">LT</div>Lena Torres</div>
+            <span style="font-size: 0.72rem; color: color-mix(in srgb, var(--color-ink) 55%, transparent); font-weight: 700;">Mar 21</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="v3-card">
+        <div class="v3-card__image">
+          <img src="https://images.unsplash.com/photo-1593696140826-c58b021acf8b?auto=format&fit=crop&w=800&q=80" alt="" onerror="this.style.display='none'"/>
+        </div>
+        <div class="v3-card__body">
+          <div class="v3-card__meta">
+            <span class="mz-tag mz-tag--green">Closing Day</span>
+            <span>·</span>
+            <span>7 min</span>
+          </div>
+          <h3 class="v3-card__title">The last 12 hours before keys exchange.</h3>
+          <p class="v3-card__excerpt">Title office, utilities, walk-through — and the one phone call we make an hour before.</p>
+          <div class="v3-card__footer">
+            <div class="v3-card__author"><div class="v3-card__author-chip">MH</div>Maya Holt</div>
+            <span style="font-size: 0.72rem; color: color-mix(in srgb, var(--color-ink) 55%, transparent); font-weight: 700;">Mar 08</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="v3-card">
+        <div class="v3-card__image">
+          <img src="https://images.unsplash.com/photo-1505692794403-34d4982f88aa?auto=format&fit=crop&w=800&q=80" alt="" onerror="this.style.display='none'"/>
+        </div>
+        <div class="v3-card__body">
+          <div class="v3-card__meta">
+            <span class="mz-tag mz-tag--orange">Pricing</span>
+            <span>·</span>
+            <span>4 min</span>
+          </div>
+          <h3 class="v3-card__title">Should you tip movers? Honest numbers.</h3>
+          <p class="v3-card__excerpt">Our crew is paid well. Tipping is still customary. Here's what actually helps.</p>
+          <div class="v3-card__footer">
+            <div class="v3-card__author"><div class="v3-card__author-chip">JP</div>Jake Park</div>
+            <span style="font-size: 0.72rem; color: color-mix(in srgb, var(--color-ink) 55%, transparent); font-weight: 700;">Feb 20</span>
+          </div>
+        </div>
+      </article>
+
+    </div>
+
+    <!-- Pagination -->
+    <div class="v3-pagination">
+      <div class="v3-pagination__info">Page 1 of 16 · 142 guides</div>
+      <div class="v3-pagination__actions">
+        <button class="cta-secondary">Prev</button>
+        <button class="cta-secondary">Load more</button>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- === RIGHT: STICKY SIDEBAR === -->
+  <aside class="v3-sidebar">
+    <div class="v3-sidebar__sticky">
+
+      <!-- Estimate form -->
+      <div class="v3-module v3-estimate">
+        <span class="kicker">Free &amp; No-obligation</span>
+        <h4 style="margin-top: 0.75rem;">Get a flat-binding estimate this week.</h4>
+        <p>We walk the home, measure, and leave you a written binding quote — same day.</p>
+        <form onsubmit="event.preventDefault()">
+          <div class="v3-field">
+            <label for="v3-name">Full Name</label>
+            <input id="v3-name" type="text" placeholder="Jane Smith" required />
+          </div>
+          <div class="v3-estimate__row">
+            <div class="v3-field">
+              <label for="v3-phone">Phone</label>
+              <input id="v3-phone" type="tel" placeholder="(312) 555-0199" required />
+            </div>
+            <div class="v3-field">
+              <label for="v3-date">Move Date</label>
+              <input id="v3-date" type="date" />
+            </div>
+          </div>
+          <div class="v3-field">
+            <label for="v3-from">From Where</label>
+            <input id="v3-from" type="text" placeholder="Chicago, IL" />
+          </div>
+          <button type="submit" class="cta-primary" style="width: 100%; margin-top: 0.35rem;">Request Free Estimate</button>
+          <div class="v3-estimate__trust">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 4 5v7c0 5 3.5 9 8 10 4.5-1 8-5 8-10V5l-8-3z"/><path d="m9 12 2 2 4-4"/></svg>
+            FMCSA licensed · ProMover certified
+          </div>
+        </form>
+      </div>
+
+      <!-- Trust stack -->
+      <div class="v3-module v3-trust">
+        <div class="v3-module__title" style="color: rgba(255,255,255,0.6);">Rated by 120+ home sellers</div>
+        <div style="display:flex; align-items:baseline; gap: 0.75rem;">
+          <div class="v3-trust__score">4.9<span>/5</span></div>
+          <div class="v3-trust__stars">★★★★★</div>
+        </div>
+        <p class="v3-trust__quote">“They were priced better than most competitors and quick and efficient. Would recommend to anyone looking for a reliable moving company.”</p>
+        <div class="v3-trust__author">Dan D. · DC → Philadelphia</div>
+      </div>
+
+      <!-- Popular rail -->
+      <div class="v3-module">
+        <div class="v3-module__title">Most-read this month</div>
+        <div class="v3-popular-list">
+          <a href="#" class="v3-popular-item">
+            <span class="v3-popular-item__num">01</span>
+            <div>
+              <div class="v3-popular-item__title">What flat-binding really means — with a sample invoice.</div>
+              <div class="v3-popular-item__meta">Pricing · 14 min</div>
+            </div>
+          </a>
+          <a href="#" class="v3-popular-item">
+            <span class="v3-popular-item__num">02</span>
+            <div>
+              <div class="v3-popular-item__title">The six-week home seller's checklist.</div>
+              <div class="v3-popular-item__meta">Selling · 9 min</div>
+            </div>
+          </a>
+          <a href="#" class="v3-popular-item">
+            <span class="v3-popular-item__num">03</span>
+            <div>
+              <div class="v3-popular-item__title">Pack a kitchen in under a day.</div>
+              <div class="v3-popular-item__meta">Packing · 6 min</div>
+            </div>
+          </a>
+          <a href="#" class="v3-popular-item">
+            <span class="v3-popular-item__num">04</span>
+            <div>
+              <div class="v3-popular-item__title">DMV to Chicago: route playbook.</div>
+              <div class="v3-popular-item__meta">Long Distance · 12 min</div>
+            </div>
+          </a>
+          <a href="#" class="v3-popular-item">
+            <span class="v3-popular-item__num">05</span>
+            <div>
+              <div class="v3-popular-item__title">The "gap week" between closings.</div>
+              <div class="v3-popular-item__meta">Storage · 5 min</div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- Service areas -->
+      <div class="v3-module">
+        <div class="v3-module__title">We move here</div>
+        <div class="v3-areas">
+          <a href="#">
+            <span class="v3-areas__city">Chicago, IL</span>
+            <span class="v3-areas__count">840+ moves</span>
+          </a>
+          <a href="#">
+            <span class="v3-areas__city">Washington, DC</span>
+            <span class="v3-areas__count">612+ moves</span>
+          </a>
+          <a href="#">
+            <span class="v3-areas__city">Arlington, VA</span>
+            <span class="v3-areas__count">307+ moves</span>
+          </a>
+          <a href="#">
+            <span class="v3-areas__city">Bethesda, MD</span>
+            <span class="v3-areas__count">269+ moves</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </aside>
+</section>
+
+<!-- ============ MOBILE STICKY CTA ============ -->
+<div class="v3-mobile-cta">
+  <div class="v3-mobile-cta__inner">
+    <div class="v3-mobile-cta__text">
+      Free in-home estimate
+      <small>Flat-binding · no hidden fees</small>
+    </div>
+    <a href="tel:+13126265980" class="cta-secondary" style="color:#fff; border-color: rgba(255,255,255,0.3); padding: 0.6rem 0.85rem;">Call</a>
+    <a href="#" class="cta-primary" style="padding: 0.6rem 0.95rem; font-size: 0.72rem;">Estimate</a>
+  </div>
+</div>
+
+<!-- ============ FOOTER ============ -->
+<footer class="mz-footer" style="margin-bottom: 5rem;">
+  <div class="page-shell">
+    <div class="mz-footer__grid">
+      <div>
+        <a href="#" class="mz-logo" style="color: #fff;">
+          <span class="mz-logo__mark">M</span>
+          <span>MoveZilla<span style="color: var(--color-brand-orange-light);">.</span></span>
+        </a>
+        <p style="color: rgba(255,255,255,0.6); margin-top: 1rem; max-width: 22rem; font-size: 0.9rem; line-height: 1.6;">
+          Flat-binding estimates and full-service moves for home sellers across Chicago and the DMV.
+        </p>
+        <div class="mz-footer__badges" style="margin-top: 1.25rem;">
+          <span class="mz-footer__badge">FMCSA Licensed</span>
+          <span class="mz-footer__badge">ProMover Certified</span>
+        </div>
+      </div>
+      <div>
+        <h4>Services</h4>
+        <ul class="mz-footer__list">
+          <li><a href="#">Local Moving</a></li>
+          <li><a href="#">Long Distance</a></li>
+          <li><a href="#">Packing Services</a></li>
+          <li><a href="#">Storage</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Guides</h4>
+        <ul class="mz-footer__list">
+          <li><a href="#">Packing</a></li>
+          <li><a href="#">Selling</a></li>
+          <li><a href="#">Pricing 101</a></li>
+          <li><a href="#">Closing Day</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul class="mz-footer__list">
+          <li><a href="tel:+13126265980">(312) 626-5980</a></li>
+          <li><a href="mailto:office@movezillamoving.com">office@movezillamoving.com</a></li>
+          <li><a href="#">Chicago, IL</a></li>
+          <li><a href="#">Washington, DC</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="mz-footer__legal">
+      <div>© 2026 MoveZilla Moving · All rights reserved</div>
+      <div style="display:flex; gap: 1.5rem;">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Accessibility</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.querySelectorAll('.v3-filter-bar__chips button').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.v3-filter-bar__chips button').forEach(x => x.classList.remove('is-on'));
+      b.classList.add('is-on');
+    });
+  });
+</script>
+
+</body>
+</html>

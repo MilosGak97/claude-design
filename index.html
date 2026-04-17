@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MoveZilla — Blog Page Explorations</title>
+<link rel="stylesheet" href="./shared/tokens.css" />
+<style>
+  .launcher {
+    padding-block: clamp(3rem, 6vw, 5rem);
+  }
+  .launcher__head {
+    max-width: 48rem;
+    margin-bottom: 2.5rem;
+  }
+  .launcher__grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+  @media (max-width: 700px) { .launcher__grid { grid-template-columns: 1fr; } }
+
+  .launcher-card {
+    position: relative;
+    display: flex; flex-direction: column;
+    padding: 2rem;
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-2xl);
+    background: var(--color-surface);
+    transition: all 0.3s ease;
+    min-height: 16rem;
+  }
+  .launcher-card:hover {
+    transform: translateY(-4px);
+    border-color: color-mix(in srgb, var(--color-brand-orange) 50%, var(--color-border-soft));
+    box-shadow: var(--shadow-elevated);
+  }
+  .launcher-card__num {
+    font-size: 0.78rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 800;
+    color: var(--color-brand-orange);
+    margin-bottom: 0.75rem;
+  }
+  .launcher-card__title {
+    font-size: 1.5rem;
+    font-weight: 900;
+    letter-spacing: -0.015em;
+    line-height: 1.15;
+    color: var(--color-ink-soft);
+  }
+  .launcher-card__desc {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: color-mix(in srgb, var(--color-ink) 65%, transparent);
+    margin-top: 0.65rem;
+    flex: 1;
+  }
+  .launcher-card__tags { display: flex; gap: 0.4rem; flex-wrap: wrap; margin-top: 1rem; }
+  .launcher-card__footer {
+    margin-top: 1.25rem;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+</style>
+</head>
+<body>
+
+<header class="mz-header">
+  <div class="page-shell mz-header__inner">
+    <a href="#" class="mz-logo">
+      <span class="mz-logo__mark">M</span>
+      <span>MoveZilla<span style="color: var(--color-brand-orange);">.</span></span>
+    </a>
+    <nav class="mz-nav" aria-label="Primary">
+      <a href="#" class="is-active">Blog Explorations</a>
+    </nav>
+    <div class="mz-header__cta">
+      <a href="#" class="cta-primary" style="padding: 0.65rem 1.15rem; font-size: 0.78rem;">Get Free Estimate</a>
+    </div>
+  </div>
+</header>
+
+<section class="launcher">
+  <div class="page-shell">
+    <div class="launcher__head">
+      <span class="kicker">4 Directions · Same Brand System</span>
+      <h1 class="text-heading-1" style="margin-top: 1.25rem;">Four blog page concepts for MoveZilla.</h1>
+      <p class="text-lead" style="margin-top: 1rem;">
+        Each version reuses the same tokens (Montserrat, brand-orange, page-shell, section-padding, kicker, cta-primary, mz-card, etc.) and differs in layout, rhythm, and content strategy.
+      </p>
+    </div>
+
+    <div class="launcher__grid">
+
+      <a href="./v1-editorial-magazine.html" class="launcher-card">
+        <div class="launcher-card__num">Version 01</div>
+        <h2 class="launcher-card__title">The Moving Journal — Editorial Magazine</h2>
+        <p class="launcher-card__desc">
+          A branded "Journal" with a cover-story hero, numbered issue strip, editor's letter, and a typography-forward feature grid. Pitches trust through authorship and personality.
+        </p>
+        <div class="launcher-card__tags">
+          <span class="mz-tag mz-tag--orange">Featured-hero</span>
+          <span class="mz-tag">Editorial</span>
+          <span class="mz-tag">Author-led</span>
+        </div>
+        <div class="launcher-card__footer">
+          <span class="mz-read-more">Open Version 01</span>
+        </div>
+      </a>
+
+      <a href="./v2-minimal-authority.html" class="launcher-card">
+        <div class="launcher-card__num">Version 02</div>
+        <h2 class="launcher-card__title">Resources — Minimal Authority</h2>
+        <p class="launcher-card__desc">
+          Calm, library-style index with big stat hero, sticky search &amp; category filters, three editor's picks, and a long text-led list. Typography does the work; imagery steps back.
+        </p>
+        <div class="launcher-card__tags">
+          <span class="mz-tag">Minimal</span>
+          <span class="mz-tag mz-tag--green">Search + Filters</span>
+          <span class="mz-tag">List-led</span>
+        </div>
+        <div class="launcher-card__footer">
+          <span class="mz-read-more">Open Version 02</span>
+        </div>
+      </a>
+
+      <a href="./v3-conversion-sidebar.html" class="launcher-card">
+        <div class="launcher-card__num">Version 03</div>
+        <h2 class="launcher-card__title">Moving Guides — Conversion Sidebar</h2>
+        <p class="launcher-card__desc">
+          Two-column layout with a sticky estimate form, live trust score, popular-articles rail, and service-area tiles. Mid-content CTA banners and a mobile sticky quick-bar keep the primary action on screen.
+        </p>
+        <div class="launcher-card__tags">
+          <span class="mz-tag mz-tag--orange">Sticky CTA</span>
+          <span class="mz-tag">Sidebar</span>
+          <span class="mz-tag">Conversion-first</span>
+        </div>
+        <div class="launcher-card__footer">
+          <span class="mz-read-more">Open Version 03</span>
+        </div>
+      </a>
+
+      <a href="./v4-visual-resource-hub.html" class="launcher-card">
+        <div class="launcher-card__num">Version 04</div>
+        <h2 class="launcher-card__title">The Playbook — Visual Resource Hub</h2>
+        <p class="launcher-card__desc">
+          Asymmetric bento hero, iconographic topic tiles, a downloadable checklist module, a quote/stat module, and a photo-led field-stories strip. Image-forward, playful, scan-friendly.
+        </p>
+        <div class="launcher-card__tags">
+          <span class="mz-tag mz-tag--green">Bento</span>
+          <span class="mz-tag">Image-led</span>
+          <span class="mz-tag mz-tag--orange">Downloads</span>
+        </div>
+        <div class="launcher-card__footer">
+          <span class="mz-read-more">Open Version 04</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+</body>
+</html>

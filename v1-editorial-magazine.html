@@ -1,0 +1,648 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>The Moving Journal — MoveZilla Moving</title>
+<meta name="description" content="Field notes, checklists, and pricing insights from the crews who move hundreds of Chicago and DMV families every year." />
+<meta name="theme-color" content="#0a0a0a" />
+<link rel="stylesheet" href="./shared/tokens.css" />
+<style>
+  /* ============================================================
+     V1 — EDITORIAL / MAGAZINE
+     Concept: A branded "Moving Journal" with a cover-story hero,
+     a numbered issue strip, an editor's letter, and a dense
+     typography-forward grid that rewards scanning.
+     ============================================================ */
+
+  .masthead-strip {
+    border-bottom: 1px solid var(--color-border-soft);
+    background: var(--color-surface-soft);
+  }
+  .masthead-strip__inner {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-block: 0.55rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: color-mix(in srgb, var(--color-ink) 55%, transparent);
+  }
+  .masthead-strip__dot {
+    width: 6px; height: 6px; border-radius: 999px; background: var(--color-brand-orange);
+    display: inline-block; margin: 0 0.6rem;
+  }
+
+  .cover {
+    padding-block: 2.5rem 4rem;
+    background:
+      radial-gradient(80% 60% at 92% 10%, color-mix(in srgb, var(--color-brand-orange) 12%, transparent) 0%, transparent 60%),
+      linear-gradient(180deg, #fff 0%, var(--color-surface-soft) 100%);
+    border-bottom: 1px solid var(--color-border-soft);
+  }
+  .cover__masthead {
+    display: flex; flex-wrap: wrap; gap: 1rem; align-items: baseline;
+    margin-bottom: 1.75rem;
+  }
+  .cover__title {
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    font-size: clamp(3rem, 7vw, 5.5rem);
+    line-height: 0.9;
+    color: var(--color-ink);
+  }
+  .cover__title em {
+    font-style: italic;
+    font-weight: 500;
+    background-image: linear-gradient(to right, var(--color-brand-orange), var(--color-brand-orange-light));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .cover__meta {
+    margin-left: auto;
+    font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700;
+    color: color-mix(in srgb, var(--color-ink) 55%, transparent);
+    text-align: right;
+  }
+  .cover__lede {
+    max-width: 46rem;
+    font-size: clamp(1.05rem, 1.4vw, 1.3rem);
+    line-height: 1.6;
+    color: color-mix(in srgb, var(--color-ink) 65%, transparent);
+  }
+
+  .cover-story {
+    display: grid;
+    gap: 2.5rem;
+    grid-template-columns: 1.25fr 1fr;
+    align-items: stretch;
+    margin-top: 3rem;
+  }
+  @media (max-width: 900px) { .cover-story { grid-template-columns: 1fr; } }
+
+  .cover-story__image {
+    position: relative;
+    border-radius: var(--radius-2xl);
+    overflow: hidden;
+    min-height: 32rem;
+    background: #222;
+    box-shadow: var(--shadow-elevated);
+  }
+  .cover-story__image img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+  }
+  .cover-story__image::after {
+    content: "";
+    position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(10,10,10,0) 55%, rgba(10,10,10,0.55) 100%);
+  }
+  .cover-story__badge {
+    position: absolute; top: 1.25rem; left: 1.25rem;
+    z-index: 2;
+  }
+  .cover-story__caption {
+    position: absolute; bottom: 1.25rem; left: 1.25rem; right: 1.25rem;
+    z-index: 2;
+    color: #fff;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 700;
+    opacity: 0.9;
+  }
+
+  .cover-story__body {
+    display: flex; flex-direction: column; justify-content: space-between; gap: 2rem;
+    padding: 1.5rem 0;
+  }
+  .cover-story__headline {
+    font-size: clamp(2rem, 3.4vw, 3.1rem);
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    color: var(--color-ink-soft);
+  }
+  .cover-story__dek {
+    font-size: 1.15rem;
+    line-height: 1.65;
+    color: color-mix(in srgb, var(--color-ink) 68%, transparent);
+    margin-top: 1.25rem;
+  }
+  .cover-story__byline {
+    display: flex; align-items: center; gap: 0.85rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--color-border-soft);
+  }
+  .cover-story__byline-text { display: flex; flex-direction: column; gap: 0.15rem; }
+  .cover-story__byline-name { font-weight: 800; font-size: 0.9rem; }
+  .cover-story__byline-meta { font-size: 0.75rem; color: color-mix(in srgb, var(--color-ink) 55%, transparent); text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; }
+
+  .issue-rail {
+    border-top: 1px solid var(--color-border-soft);
+    border-bottom: 1px solid var(--color-border-soft);
+    background: #fff;
+    padding-block: 1.25rem;
+  }
+  .issue-rail__track {
+    display: flex;
+    gap: 2.5rem;
+    overflow-x: auto;
+    align-items: center;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 700;
+  }
+  .issue-rail__label { color: var(--color-brand-orange); }
+  .issue-rail__item { color: color-mix(in srgb, var(--color-ink) 70%, transparent); white-space: nowrap; }
+  .issue-rail__item strong { color: var(--color-ink); font-weight: 800; }
+
+  .feature-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr 1fr;
+    gap: 2rem;
+  }
+  @media (max-width: 1024px) { .feature-grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 640px)  { .feature-grid { grid-template-columns: 1fr; } }
+
+  .feature-grid__left { grid-row: span 2; display: flex; flex-direction: column; gap: 1.75rem; }
+  @media (max-width: 1024px) { .feature-grid__left { grid-row: auto; } }
+
+  .article {
+    display: flex; flex-direction: column; gap: 0.9rem;
+  }
+  .article__image {
+    aspect-ratio: 16 / 10;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    background: var(--color-surface-soft);
+  }
+  .article__image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+  .article:hover .article__image img { transform: scale(1.05); }
+  .article--tall .article__image { aspect-ratio: 4 / 5; }
+  .article__meta {
+    display: flex; gap: 0.75rem; align-items: center;
+    font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700;
+    color: color-mix(in srgb, var(--color-ink) 55%, transparent);
+  }
+  .article__meta .divider { width: 3px; height: 3px; border-radius: 999px; background: color-mix(in srgb, var(--color-ink) 30%, transparent); }
+  .article__title {
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: -0.015em;
+    line-height: 1.2;
+    color: var(--color-ink-soft);
+    transition: color 0.25s ease;
+  }
+  .article--lead .article__title { font-size: 1.9rem; }
+  .article:hover .article__title { color: var(--color-brand-orange); }
+  .article__excerpt { font-size: 0.95rem; line-height: 1.6; color: color-mix(in srgb, var(--color-ink) 65%, transparent); }
+
+  .editor-letter {
+    display: grid;
+    grid-template-columns: 1fr 1.3fr;
+    gap: 3rem;
+    align-items: center;
+    padding: 3rem;
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-2xl);
+    background:
+      radial-gradient(80% 100% at 100% 0%, color-mix(in srgb, var(--color-brand-orange) 7%, transparent) 0%, transparent 60%),
+      var(--color-surface);
+  }
+  @media (max-width: 900px) { .editor-letter { grid-template-columns: 1fr; padding: 2rem; } }
+  .editor-letter__quote {
+    font-size: clamp(1.5rem, 2.2vw, 1.9rem);
+    font-weight: 800;
+    letter-spacing: -0.015em;
+    line-height: 1.3;
+    color: var(--color-ink-soft);
+  }
+  .editor-letter__quote-mark {
+    font-family: Georgia, serif;
+    font-size: 5rem;
+    line-height: 0.4;
+    color: var(--color-brand-orange);
+    font-weight: 900;
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Section: Desk columns */
+  .desks {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem;
+  }
+  @media (max-width: 900px) { .desks { grid-template-columns: repeat(2, 1fr); } }
+  .desk {
+    padding: 1.75rem;
+    border: 1px solid var(--color-border-soft);
+    border-radius: var(--radius-xl);
+    background: #fff;
+    display: flex; flex-direction: column; gap: 0.75rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .desk:hover { transform: translateY(-3px); box-shadow: var(--shadow-soft); }
+  .desk__num {
+    font-weight: 900; font-size: 2.5rem; letter-spacing: -0.04em;
+    color: color-mix(in srgb, var(--color-ink) 15%, transparent);
+    line-height: 0.9;
+  }
+  .desk__title { font-weight: 800; font-size: 1rem; letter-spacing: -0.01em; }
+  .desk__count { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: var(--color-brand-orange); }
+
+  /* Newsletter */
+  .newsletter {
+    position: relative;
+    border-radius: var(--radius-3xl);
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 55%, #2a1a07 100%);
+    color: #fff;
+    padding: clamp(2.5rem, 5vw, 4.5rem);
+    overflow: hidden;
+  }
+  .newsletter::before {
+    content: "";
+    position: absolute; inset: 0;
+    background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1.5px);
+    background-size: 22px 22px;
+    opacity: 0.6;
+    pointer-events: none;
+  }
+  .newsletter::after {
+    content: "";
+    position: absolute; right: -10%; bottom: -40%;
+    width: 40rem; height: 40rem; border-radius: 50%;
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--color-brand-orange) 35%, transparent), transparent);
+    filter: blur(20px);
+    pointer-events: none;
+  }
+  .newsletter__inner {
+    position: relative; z-index: 1;
+    display: grid; grid-template-columns: 1.2fr 1fr; gap: 3rem;
+    align-items: center;
+  }
+  @media (max-width: 900px) { .newsletter__inner { grid-template-columns: 1fr; } }
+  .newsletter__headline { font-size: clamp(1.8rem, 3vw, 2.75rem); font-weight: 900; letter-spacing: -0.025em; line-height: 1.05; }
+  .newsletter__headline span { color: var(--color-brand-orange-light); }
+  .newsletter__form {
+    display: flex; flex-direction: column; gap: 0.75rem;
+    padding: 1rem;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius-xl);
+    backdrop-filter: blur(8px);
+  }
+  .newsletter__row { display: flex; gap: 0.6rem; }
+  .newsletter__input {
+    flex: 1;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.12);
+    padding: 0.95rem 1rem;
+    border-radius: var(--radius-lg);
+    color: #fff;
+    font-family: inherit;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s ease;
+  }
+  .newsletter__input::placeholder { color: rgba(255,255,255,0.45); }
+  .newsletter__input:focus { border-color: var(--color-brand-orange); }
+  .newsletter__note { font-size: 0.72rem; color: rgba(255,255,255,0.55); letter-spacing: 0.04em; }
+
+</style>
+</head>
+<body>
+
+<!-- ============ HEADER ============ -->
+<header class="mz-header">
+  <div class="page-shell mz-header__inner">
+    <a href="#" class="mz-logo">
+      <span class="mz-logo__mark">M</span>
+      <span>MoveZilla<span style="color: var(--color-brand-orange);">.</span></span>
+    </a>
+    <nav class="mz-nav" aria-label="Primary">
+      <a href="#">Process</a>
+      <a href="#">Services</a>
+      <a href="#">Reviews</a>
+      <a href="#" class="is-active">Journal</a>
+      <a href="#">Gallery</a>
+      <a href="#">Contact</a>
+    </nav>
+    <div class="mz-header__cta">
+      <a href="tel:+13126265980" class="mz-phone">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2A19.9 19.9 0 0 1 11 18.3a19.5 19.5 0 0 1-6.1-6.1A19.9 19.9 0 0 1 1.1 4.2 2 2 0 0 1 3.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.7a2 2 0 0 1-.5 2l-1.3 1.3a16 16 0 0 0 6.1 6.1l1.3-1.3a2 2 0 0 1 2-.5c.9.3 1.8.5 2.7.6A2 2 0 0 1 22 16.9z"/></svg>
+        (312) 626-5980
+      </a>
+      <a href="#" class="cta-primary" style="padding: 0.65rem 1.15rem; font-size: 0.78rem;">Get Free Estimate</a>
+    </div>
+  </div>
+</header>
+
+<!-- ============ MASTHEAD STRIP ============ -->
+<div class="masthead-strip">
+  <div class="page-shell masthead-strip__inner">
+    <div>Vol. 07 <span class="masthead-strip__dot"></span> Spring 2026</div>
+    <div>120+ Five-Star Reviews <span class="masthead-strip__dot"></span> 2,028 Moves Completed</div>
+  </div>
+</div>
+
+<!-- ============ COVER ============ -->
+<section class="cover">
+  <div class="page-shell">
+    <div class="cover__masthead">
+      <h1 class="cover__title">The Moving <em>Journal</em></h1>
+      <div class="cover__meta">
+        Field notes from our crews<br/>
+        Chicago · DC · Maryland · Virginia
+      </div>
+    </div>
+    <p class="cover__lede">
+      Honest pricing explainers, packing rituals, and the calendar we give home sellers the week before closing. Written by the people who actually load the truck.
+    </p>
+
+    <article class="cover-story">
+      <div class="cover-story__image">
+        <span class="kicker cover-story__badge">Cover Story · Issue 07</span>
+        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=80" alt="Bright modern living room on moving day" onerror="this.style.display='none'" />
+        <div class="cover-story__caption">Photograph · Lincoln Park, Chicago · March 2026</div>
+      </div>
+      <div class="cover-story__body">
+        <div>
+          <div class="article__meta" style="margin-bottom: 1.25rem;">
+            <span>Long Reads</span>
+            <span class="divider"></span>
+            <span>14 min read</span>
+            <span class="divider"></span>
+            <span>Updated Apr 12</span>
+          </div>
+          <h2 class="cover-story__headline">What flat-binding really means — and why your “low” quote just went up $1,400.</h2>
+          <p class="cover-story__dek">
+            Every spring we meet families who were quoted one number by phone and billed another on move day. Here's exactly how a binding estimate works, why we measure cubic feet in person, and the four line items you should never see on a moving invoice.
+          </p>
+        </div>
+        <div class="cover-story__byline">
+          <div class="icon-chip">SR</div>
+          <div class="cover-story__byline-text">
+            <div class="cover-story__byline-name">Srdan Marjanović-Raić</div>
+            <div class="cover-story__byline-meta">Co-Founder · Essay</div>
+          </div>
+          <a href="#" class="mz-read-more" style="margin-left: auto;">Read the essay</a>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ============ ISSUE RAIL ============ -->
+<div class="issue-rail">
+  <div class="page-shell">
+    <div class="issue-rail__track no-scrollbar">
+      <div class="issue-rail__label">In this issue</div>
+      <div class="issue-rail__item"><strong>01</strong> &nbsp; Binding Estimates, Demystified</div>
+      <div class="issue-rail__item"><strong>02</strong> &nbsp; The 6-Week Seller Checklist</div>
+      <div class="issue-rail__item"><strong>03</strong> &nbsp; Packing the Kitchen in Under a Day</div>
+      <div class="issue-rail__item"><strong>04</strong> &nbsp; DMV to Chicago: A Route Playbook</div>
+      <div class="issue-rail__item"><strong>05</strong> &nbsp; Storage, Staging & the Gap Week</div>
+      <div class="issue-rail__item"><strong>06</strong> &nbsp; Realtor Roundtable: Closing Day</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ DESKS ============ -->
+<section class="section-padding">
+  <div class="page-shell">
+    <div style="display: flex; align-items: end; justify-content: space-between; gap: 2rem; margin-bottom: 2rem; flex-wrap: wrap;">
+      <div>
+        <div class="label-overline" style="margin-bottom: 0.75rem;">The Desks</div>
+        <h2 class="text-heading-2">Pick the section that matches your move.</h2>
+      </div>
+      <a href="#" class="mz-read-more">See all topics</a>
+    </div>
+    <div class="desks">
+      <a href="#" class="desk">
+        <div class="desk__num">01</div>
+        <div class="desk__title">Packing &amp; Prep</div>
+        <div class="desk__count">38 Articles</div>
+      </a>
+      <a href="#" class="desk">
+        <div class="desk__num">02</div>
+        <div class="desk__title">Selling Your Home</div>
+        <div class="desk__count">24 Articles</div>
+      </a>
+      <a href="#" class="desk">
+        <div class="desk__num">03</div>
+        <div class="desk__title">Long Distance</div>
+        <div class="desk__count">19 Articles</div>
+      </a>
+      <a href="#" class="desk">
+        <div class="desk__num">04</div>
+        <div class="desk__title">Storage &amp; Gap Week</div>
+        <div class="desk__count">11 Articles</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEATURE GRID ============ -->
+<section style="padding-bottom: 5rem;">
+  <div class="page-shell">
+    <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: 2rem; border-bottom: 1px solid var(--color-border-soft); padding-bottom: 1rem;">
+      <h3 class="text-heading-3">Features</h3>
+      <div class="label-overline">Edited by the MoveZilla Team</div>
+    </div>
+
+    <div class="feature-grid">
+      <!-- Left lead article -->
+      <div class="feature-grid__left">
+        <article class="article article--lead article--tall">
+          <a href="#" class="article__image">
+            <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1000&q=80" alt="" onerror="this.style.display='none'"/>
+          </a>
+          <div class="article__meta">
+            <span class="mz-tag mz-tag--orange">Selling</span>
+            <span>9 min read</span>
+          </div>
+          <h4 class="article__title">The six-week seller's checklist: what to start the day your listing goes live.</h4>
+          <p class="article__excerpt">Staging sells homes. But what happens off-camera — donation pickups, permit pulls, dumpster scheduling — is what keeps closing day boring (in the best way). Here's the exact calendar our crews recommend.</p>
+          <div style="display:flex; align-items:center; gap: 0.6rem; padding-top: 0.5rem;">
+            <div class="icon-chip" style="width:2rem;height:2rem;font-size:0.72rem;">MH</div>
+            <div style="font-size: 0.82rem; font-weight: 700;">Maya Holt</div>
+            <span class="divider" style="width:3px;height:3px;border-radius:999px;background:color-mix(in srgb, var(--color-ink) 30%, transparent);"></span>
+            <div style="font-size: 0.78rem; color: color-mix(in srgb, var(--color-ink) 55%, transparent);">Apr 09, 2026</div>
+          </div>
+        </article>
+
+        <article class="article">
+          <div class="article__meta">
+            <span class="mz-tag mz-tag--green">Realtor Roundtable</span>
+            <span>11 min read</span>
+          </div>
+          <h4 class="article__title">“The last 48 hours before closing are more stressful than the six months before.” Three Chicago realtors tell us why.</h4>
+          <p class="article__excerpt">A candid conversation with Team Hjorth, GMS Realty, and @properties on the logistics that actually slip — and the one question every seller should ask their mover before keys exchange.</p>
+        </article>
+      </div>
+
+      <!-- Column 2 -->
+      <article class="article">
+        <a href="#" class="article__image">
+          <img src="https://images.unsplash.com/photo-1528844190345-e56b1f5b2af3?auto=format&fit=crop&w=800&q=80" alt="" onerror="this.style.display='none'"/>
+        </a>
+        <div class="article__meta">
+          <span class="mz-tag">Packing</span>
+          <span>6 min read</span>
+        </div>
+        <h4 class="article__title">How to pack a kitchen in under a day without breaking a single plate.</h4>
+        <p class="article__excerpt">The order we always pack in — and the four items we wrap by hand instead of in a box.</p>
+      </article>
+
+      <article class="article">
+        <a href="#" class="article__image">
+          <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?auto=format&fit=crop&w=800&q=80" alt="" onerror="this.style.display='none'"/>
+        </a>
+        <div class="article__meta">
+          <span class="mz-tag mz-tag--orange">Long Distance</span>
+          <span>12 min read</span>
+        </div>
+        <h4 class="article__title">DMV to Chicago: a route playbook for the 750-mile relocation.</h4>
+        <p class="article__excerpt">What changes when your move crosses three states — and why we plan around the Pennsylvania tolls, not the weather.</p>
+      </article>
+
+      <article class="article">
+        <a href="#" class="article__image">
+          <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=800&q=80" alt="" onerror="this.style.display='none'"/>
+        </a>
+        <div class="article__meta">
+          <span class="mz-tag">Storage</span>
+          <span>5 min read</span>
+        </div>
+        <h4 class="article__title">The “gap week”: what to do when you close on the new place seven days after selling the old one.</h4>
+        <p class="article__excerpt">Climate-controlled vs. warehouse storage, plus the inventory spreadsheet we send every family.</p>
+      </article>
+
+      <article class="article">
+        <a href="#" class="article__image">
+          <img src="https://images.unsplash.com/photo-1593696140826-c58b021acf8b?auto=format&fit=crop&w=800&q=80" alt="" onerror="this.style.display='none'"/>
+        </a>
+        <div class="article__meta">
+          <span class="mz-tag mz-tag--green">Planning</span>
+          <span>8 min read</span>
+        </div>
+        <h4 class="article__title">A flat-binding estimate, annotated: every line item on the sample invoice.</h4>
+        <p class="article__excerpt">Open up a real MoveZilla estimate. Here's what each charge means, and the four hidden fees you should never see.</p>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ EDITOR LETTER ============ -->
+<section style="padding-block: 1rem 5rem;">
+  <div class="page-shell">
+    <div class="editor-letter">
+      <div>
+        <div class="label-overline" style="margin-bottom: 0.85rem;">From the Editor</div>
+        <h3 class="text-heading-3" style="margin-bottom: 0.65rem;">Why we started writing this journal.</h3>
+        <p class="text-copy">
+          We run a moving company, not a magazine. But the same five questions come up on every in-home estimate — about pricing, timelines, packing, storage, and closing day. So we started writing them down. Every issue is a collection of answers we've given in someone's kitchen.
+        </p>
+        <div style="margin-top: 1.25rem; display: inline-flex; gap: 0.9rem; align-items: center;">
+          <div class="icon-chip icon-chip--lg">SR</div>
+          <div>
+            <div style="font-weight: 800;">Srdan M-R</div>
+            <div class="label-overline" style="margin-top:0.15rem;">Co-founder · Editor</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <span class="editor-letter__quote-mark">“</span>
+        <p class="editor-letter__quote">
+          Moving is one of the most stressful moments in a family's life, and we take that personally. The least we can do is tell you what we'd tell our own parents.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ NEWSLETTER / CTA ============ -->
+<section style="padding-bottom: 5rem;">
+  <div class="page-shell">
+    <div class="newsletter">
+      <div class="newsletter__inner">
+        <div>
+          <span class="kicker" style="background-image: linear-gradient(to right, rgba(255,255,255,0.15), rgba(255,255,255,0.05)); border: 1px solid rgba(255,255,255,0.15);">Weekly · Free</span>
+          <h3 class="newsletter__headline" style="margin-top: 1rem;">Get the checklist we give every <span>new client.</span></h3>
+          <p style="font-size: 1.05rem; color: rgba(255,255,255,0.7); margin-top: 0.85rem; max-width: 32rem;">
+            One short email each Friday. Checklists, pricing honesty, and the quiet tricks we've learned across 2,028 moves.
+          </p>
+        </div>
+        <form class="newsletter__form" onsubmit="event.preventDefault()">
+          <label style="font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; color: rgba(255,255,255,0.6);">Email address</label>
+          <div class="newsletter__row">
+            <input type="email" class="newsletter__input" placeholder="you@example.com" />
+            <button type="submit" class="cta-primary">Subscribe</button>
+          </div>
+          <div class="newsletter__note">No spam. Unsubscribe anytime. By subscribing you agree to our privacy policy.</div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="mz-footer">
+  <div class="page-shell">
+    <div class="mz-footer__grid">
+      <div>
+        <a href="#" class="mz-logo" style="color: #fff;">
+          <span class="mz-logo__mark">M</span>
+          <span>MoveZilla<span style="color: var(--color-brand-orange-light);">.</span></span>
+        </a>
+        <p style="color: rgba(255,255,255,0.6); margin-top: 1rem; max-width: 22rem; font-size: 0.9rem; line-height: 1.6;">
+          Flat-binding estimates and full-service moves for home sellers across Chicago and the DMV.
+        </p>
+        <div class="mz-footer__badges" style="margin-top: 1.25rem;">
+          <span class="mz-footer__badge">FMCSA Licensed</span>
+          <span class="mz-footer__badge">ProMover Certified</span>
+        </div>
+      </div>
+      <div>
+        <h4>Services</h4>
+        <ul class="mz-footer__list">
+          <li><a href="#">Local Moving</a></li>
+          <li><a href="#">Long Distance</a></li>
+          <li><a href="#">Packing Services</a></li>
+          <li><a href="#">Storage</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Journal</h4>
+        <ul class="mz-footer__list">
+          <li><a href="#">Packing &amp; Prep</a></li>
+          <li><a href="#">Selling Your Home</a></li>
+          <li><a href="#">Long Distance</a></li>
+          <li><a href="#">Storage</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <ul class="mz-footer__list">
+          <li><a href="tel:+13126265980">(312) 626-5980</a></li>
+          <li><a href="mailto:office@movezillamoving.com">office@movezillamoving.com</a></li>
+          <li><a href="#">Chicago, IL</a></li>
+          <li><a href="#">Washington, DC</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="mz-footer__legal">
+      <div>© 2026 MoveZilla Moving · All rights reserved</div>
+      <div style="display:flex; gap: 1.5rem;">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Accessibility</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
