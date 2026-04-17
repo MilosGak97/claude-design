@@ -4,8 +4,8 @@
   "version": "1.0.0",
   "description": "Static blog design explorations for MoveZilla, served as a simple Railway web service.",
   "scripts": {
-    "start": "serve -s . -l $PORT",
-    "start:local": "serve -s . -l 3000"
+    "start": "serve . -l $PORT",
+    "start:local": "serve . -l 3000"
   },
   "dependencies": {
     "serve": "^14.2.4"

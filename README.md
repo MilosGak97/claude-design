@@ -124,6 +124,9 @@ This folder is now wired to run as its own static Railway service.
 - `package.json` with a tiny static server (`serve`)
 - `railway.json` so Railway starts it with `npm start`
 
+Note: this uses plain static serving, not SPA fallback mode, so direct links like
+`/v1-editorial-magazine.html` and `/v4-visual-resource-hub.html` resolve correctly.
+
 ### Local smoke test
 
 ```bash
